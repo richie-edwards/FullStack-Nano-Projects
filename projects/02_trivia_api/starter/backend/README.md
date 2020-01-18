@@ -76,6 +76,14 @@ The API will return the following request error types:
 - 422: Unprocessable Entity
 
 ### Endpoints
+- GET /categories
+- GET /questions
+- DELETE /questions/{int:question_id}
+- POST /questions
+- POST /questions/search_results
+- GET /categories/{int:category_id}/questions
+- POST /quizzes
+
 #### GET /categories
 - General:
 - - Returns categories object and success value
@@ -96,7 +104,7 @@ The API will return the following request error types:
 
 #### GET /questions
 - General:
-- - Returns a list of questions, number of total questions, current category, categories. success value
+    - Returns a list of questions, number of total questions, current category, categories. success value
 - Sample: ```curl http://127.0.0.1:5000/questions```
 ```
 { 
@@ -188,8 +196,8 @@ The API will return the following request error types:
 
 #### DELETE /questions/{int:question_id}
 - General:
-- - Deletes the question that is of the ID provided in the request.
-- - Returns the ID of the delete question, a list of questions based on page (10 items per page), number of total questions and success value.
+    - Deletes the question that is of the ID provided in the request.
+    - Returns the ID of the delete question, a list of questions based on page (10 items per page), number of total questions and success value.
 - Sample: ```curl -X DELETE http://127.0.0.1:5000/questions/13```
 ```
 {     
@@ -263,10 +271,11 @@ The API will return the following request error types:
     "total_questions":18
 }
 ```
+
 #### POST /questions
 - General:
-- - Creates a new question.
-- - Returns a list of questions, number of total questions, current category, categories. success value
+    - Creates a new question.
+    - Returns a list of questions, number of total questions, current category, categories. success value
 - Sample: ```curl -X POST http://127.0.0.1:5000/questions -H "Content-Type: application/json" -d '{"question":"test question?","answer":"test answer", "category":1, "difficulty":3}'```
 
 ```
@@ -277,51 +286,77 @@ The API will return the following request error types:
 ```
 
 #### POST /questions/search_results
+- General:
+    - Returns questions that contain the given search term.
+    - Returns a list of questions, number of total questions that match, current category and success value.
+- Sample: ```curl -X POST http://127.0.0.1:5000/questions/search_results -H "Content-Type: application/json" -d '{"searchTerm":"soccer"}'```
+
+```
+{ 
+    "current_category":"",
+    "questions":[ 
+        { 
+            "answer":"Brazil",
+            "category":6,
+            "difficulty":3,
+            "id":10,
+            "question":"Which is the only team to play in every soccer World Cup tournament?"
+        },
+        { 
+            "answer":"Uruguay",
+            "category":6,
+            "difficulty":4,
+            "id":11,
+            "question":"Which country won the first ever soccer World Cup in 1930?"
+        }
+    ],
+    "success":true,
+    "total_questions":2
+}
+```
+
 #### GET /categories/{int:category_id}/questions
+- General:
+    - Returns a list of questions (answer, category, difficulty, id, question) and success value.
+- Sample: ```curl http://127.0.0.1:5000/categories/3/questions```
+```
+{ 
+    "questions":[ 
+        { 
+            "answer":"Agra",
+            "category":3,
+            "difficulty":2,
+            "id":15,
+            "question":"The Taj Mahal is located in which Indian city?"
+        },
+        { 
+            "answer":"Haiti",
+            "category":3,
+            "difficulty":3,
+            "id":26,
+            "question":"What country shares the island with Dominican Republic?"
+        }
+    ],
+    "success":true
+}
+```
+
 #### POST /quizzes
-
-A GET endpoint request for questions,including pagination.
-    Returns a list of questions, number of total questions,
-    current category, categories.
-
-
-
-
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
-
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-REVIEW_COMMENT
+- General:
+    - Gets questions to play the quiz. This endpoint takes category and previous question parameters and returns a random questions within the given category, if provided, that is not one of the previous questions.
+- Sample: ```curl -X POST http://127.0.0.1:5000/quizzes -H "Content-Type: application/json" -d '{"previous_questions":[],"quiz_category":{"type":"Science","id":"1"}}'```
 ```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
+{ 
+    "question":{ 
+        "answer":"Blood",
+        "category":1,
+        "difficulty":4,
+        "id":22,
+        "question":"Hematology is a branch of medicine involving the study of what?"
+    },
+    "success":true
+}
 ```
-
 
 ## Testing
 To run the tests, run
