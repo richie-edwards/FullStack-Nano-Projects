@@ -52,7 +52,240 @@ Setting the `FLASK_ENV` variable to `development` will detect file changes and r
 
 Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
-## Tasks
+## API Reference
+
+### Getting Started
+Base URL: This application is currently not hosted and can only be run locally.
+Authentication: This version of the application does not require authentication.
+
+### Error Handling
+Error are returned as JSON objects in the following format:
+```
+{
+    "success": False,
+    "error": 404,
+    "message": "not found"
+}
+```
+
+The API will return the following request error types:
+
+- 400: Bad Request
+- 404: Resource Not Found
+- 405: Method Not Allowed
+- 422: Unprocessable Entity
+
+### Endpoints
+#### GET /categories
+- General:
+- - Returns categories object and success value
+- Sample: ```curl http://127.0.0.1:5000/categories```
+```
+{ 
+    "categories":{ 
+        "1":"Science",
+        "2":"Art",
+        "3":"Geography",
+        "4":"History",
+        "5":"Entertainment",
+        "6":"Sports"
+    },
+    "success":true
+}
+```
+
+#### GET /questions
+- General:
+- - Returns a list of questions, number of total questions, current category, categories. success value
+- Sample: ```curl http://127.0.0.1:5000/questions```
+```
+{ 
+    "categories":{ 
+        "1":"Science",
+        "2":"Art",
+        "3":"Geography",
+        "4":"History",
+        "5":"Entertainment",
+        "6":"Sports"
+    },
+    "current_category":"hard coded category",
+    "questions":[ 
+        { 
+            "answer":"Apollo 13",
+            "category":5,
+            "difficulty":4,
+            "id":2,
+            "question":"What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+        },
+        { 
+            "answer":"Tom Cruise",
+            "category":5,
+            "difficulty":4,
+            "id":4,
+            "question":"What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+        },
+        { 
+            "answer":"Maya Angelou",
+            "category":4,
+            "difficulty":2,
+            "id":5,
+            "question":"Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+        },
+        { 
+            "answer":"Edward Scissorhands",
+            "category":5,
+            "difficulty":3,
+            "id":6,
+            "question":"What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+        },
+        { 
+            "answer":"Muhammad Ali",
+            "category":4,
+            "difficulty":1,
+            "id":9,
+            "question":"What boxer's original name is Cassius Clay?"
+        },
+        { 
+            "answer":"Brazil",
+            "category":6,
+            "difficulty":3,
+            "id":10,
+            "question":"Which is the only team to play in every soccer World Cup tournament?"
+        },
+        { 
+            "answer":"Uruguay",
+            "category":6,
+            "difficulty":4,
+            "id":11,
+            "question":"Which country won the first ever soccer World Cup in 1930?"
+        },
+        { 
+            "answer":"George Washington Carver",
+            "category":4,
+            "difficulty":2,
+            "id":12,
+            "question":"Who invented Peanut Butter?"
+        },
+        { 
+            "answer":"Lake Victoria",
+            "category":3,
+            "difficulty":2,
+            "id":13,
+            "question":"What is the largest lake in Africa?"
+        },
+        { 
+            "answer":"Agra",
+            "category":3,
+            "difficulty":2,
+            "id":15,
+            "question":"The Taj Mahal is located in which Indian city?"
+        }
+    ],
+    "success":true,
+    "total_questions":19
+}
+```
+
+#### DELETE /questions/{int:question_id}
+- General:
+- - Deletes the question that is of the ID provided in the request.
+- - Returns the ID of the delete question, a list of questions based on page (10 items per page), number of total questions and success value.
+- Sample: ```curl -X DELETE http://127.0.0.1:5000/questions/13```
+```
+{     
+    "deleted": 13,
+    "questions":[ 
+        { 
+            "answer":"Apollo 13",
+            "category":5,
+            "difficulty":4,
+            "id":2,
+            "question":"What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+        },
+        { 
+            "answer":"Tom Cruise",
+            "category":5,
+            "difficulty":4,
+            "id":4,
+            "question":"What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+        },
+        { 
+            "answer":"Maya Angelou",
+            "category":4,
+            "difficulty":2,
+            "id":5,
+            "question":"Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+        },
+        { 
+            "answer":"Edward Scissorhands",
+            "category":5,
+            "difficulty":3,
+            "id":6,
+            "question":"What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+        },
+        { 
+            "answer":"Muhammad Ali",
+            "category":4,
+            "difficulty":1,
+            "id":9,
+            "question":"What boxer's original name is Cassius Clay?"
+        },
+        { 
+            "answer":"Brazil",
+            "category":6,
+            "difficulty":3,
+            "id":10,
+            "question":"Which is the only team to play in every soccer World Cup tournament?"
+        },
+        { 
+            "answer":"Uruguay",
+            "category":6,
+            "difficulty":4,
+            "id":11,
+            "question":"Which country won the first ever soccer World Cup in 1930?"
+        },
+        { 
+            "answer":"George Washington Carver",
+            "category":4,
+            "difficulty":2,
+            "id":12,
+            "question":"Who invented Peanut Butter?"
+        },       
+        { 
+            "answer":"Agra",
+            "category":3,
+            "difficulty":2,
+            "id":15,
+            "question":"The Taj Mahal is located in which Indian city?"
+        }
+    ],
+    "success":true,
+    "total_questions":18
+}
+```
+#### POST /questions
+- General:
+- - Creates a new question.
+- - Returns a list of questions, number of total questions, current category, categories. success value
+- Sample: ```curl -X POST http://127.0.0.1:5000/questions -H "Content-Type: application/json" -d '{"question":"test question?","answer":"test answer", "category":1, "difficulty":3}'```
+
+```
+{
+    "question":"test question?",
+    "success":true
+}
+```
+
+#### POST /questions/search_results
+#### GET /categories/{int:category_id}/questions
+#### POST /quizzes
+
+A GET endpoint request for questions,including pagination.
+    Returns a list of questions, number of total questions,
+    current category, categories.
+
+
+
 
 One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
 
