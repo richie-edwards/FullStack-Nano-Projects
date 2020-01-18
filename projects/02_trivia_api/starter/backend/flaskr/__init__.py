@@ -94,12 +94,12 @@ def create_app(test_config=None):
         try:
             question.delete()
             questions = Question.query.order_by(Question.id).all()
-            
+
             return jsonify({
-            "success": True,
-            "deleted": question.id,
-            "questions": paginate_questions(request, questions),
-            "total_questions": len(questions)
+                "success": True,
+                "deleted": question.id,
+                "questions": paginate_questions(request, questions),
+                "total_questions": len(questions)
             })
 
         except:
@@ -116,8 +116,8 @@ def create_app(test_config=None):
         if ('question' not in data
             or 'answer' not in data
             or 'category' not in data
-            or 'difficulty' not in data):
-                abort(422)  # unprocessable entity
+                or 'difficulty' not in data):
+            abort(422)  # unprocessable entity
 
         question = data.get('question')
         answer = data.get('answer')
@@ -146,11 +146,11 @@ def create_app(test_config=None):
     is a substring of the question.
     '''
     @app.route('/questions/search_results', methods=['POST'])
-    def search_questions():        
-        data = request.get_json() 
+    def search_questions():
+        data = request.get_json()
         if 'searchTerm' not in data:
             abort(422)  # unprocessable entity
-        search_term = data.get('searchTerm')        
+        search_term = data.get('searchTerm')
         questions = Question.query.filter(Question.question.ilike('%' + search_term + '%')).all()
 
         return jsonify({
@@ -168,7 +168,7 @@ def create_app(test_config=None):
         available_categories = Category.query.filter(
             Category.id == category_id).all()
         questions = []
-        if len(available_categories) == 0:            
+        if len(available_categories) == 0:
             abort(404)
 
         questions = Question.query.filter(Question.category == category_id).order_by(Question.id).all()
@@ -231,7 +231,7 @@ def create_app(test_config=None):
             "error": 400,
             "message": "bad request"
         }), 400
-        
+
     @app.errorhandler(404)
     def page_not_found(error):
         return jsonify({

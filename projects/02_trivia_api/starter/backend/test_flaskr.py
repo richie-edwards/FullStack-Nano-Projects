@@ -36,6 +36,14 @@ class TriviaTestCase(unittest.TestCase):
             'searchTerm': 'soccer'
         }
         
+        self.previous_questions = {
+            'previous_questions': [], 
+            'quiz_category': {
+                'type':'Science', 
+                'id': '1'
+            }
+        }
+        
         """ restore question used in delete test after each test """
         ali = Question.query.filter(Question.question ==
                                     "What boxer's original name is Cassius Clay?").one_or_none()        
@@ -174,9 +182,23 @@ class TriviaTestCase(unittest.TestCase):
         self.assertFalse(data['success'], "The success result was True")        
         
     
-    """ Test that we get a 422 when trying to create a question with missing answer """
+    """ Test that quizes only returns questions not seen before """
     def test_quizzes(self):
-        pass
+        
+        myCategory = Category.query.filter(
+            Category.type == 'Art').one_or_none()
+        gogh_questions = Question.query.filter(Question.question.ilike('%'+ 'gogh' +'%')).all()
+        question_ids = [question.id for question in gogh_questions]        
+        all_questions = Question.query.all()
+        
+        response = self.client().post(f'quizzes', json={
+            "previous_questions": question_ids, "quiz_category": {"type": "Art", "id": str(myCategory.id)}})
+        data = json.loads(response.data)
+        
+        self.assertEqual(200, response.status_code)
+        self.assertTrue(data['success'])
+        self.assertTrue(str(data['question']['id']) not in gogh_questions)
+        
     
     """ Test that we get questions by category"""
     def test_questions_by_category(self):
